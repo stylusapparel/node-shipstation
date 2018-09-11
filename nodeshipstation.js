@@ -258,6 +258,20 @@ module.exports = function(apiKey, apiSecret, to, per){
 			return store;
 		},
 
+		// Stylus modification here...
+		// -----------------------------------------------------------------
+		updateAuthKeys: function(key,secret,callback){
+
+			baseRequest = limiter(baseRequest.defaults({
+				auth: {
+					user: key,
+					pass: secret
+				}
+			})).to(40).per(60);
+			if (to) baseRequest.to(to);
+			if (per)baseRequest.per(per);
+		},
+
 		getWarehouses: '/warehouses',
 		getWarehouse: '/warehouses/{id}',
 		updateWarehouse: '/warehouses/{id}', // http://www.shipstation.com/developer-api/#/reference/warehouses/warehouse/update-warehouse
