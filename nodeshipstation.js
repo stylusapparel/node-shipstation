@@ -1,18 +1,26 @@
 module.exports = function(apiKey, apiSecret, to, per){
+
+	// Store the api credentials
+	this.apiKey = apiKey
+	this.apiSecret = apiSecret
+
 	var limiter = require("simple-rate-limiter"),
 		request = require("request"),
 		apiUrl = 'https://ssapi.shipstation.com',
-		baseRequest = limiter(request.defaults({
+		baseRequestRaw = request.defaults({
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json'
 			},
 			json:true,
 			auth: {
-				user: apiKey,
-				pass: apiSecret
+				user: this.apiKey,
+				pass: this.apiSecret
 			}
-		})).to(40).per(60);
+		}),
+		baseRequest = limiter(baseRequestRaw).to(40).per(60),
+		self = this;
+
 	if (to) baseRequest.to(to);
 	if (per)baseRequest.per(per);
 	var deepValue = function (obj, path) {
@@ -262,14 +270,24 @@ module.exports = function(apiKey, apiSecret, to, per){
 		// -----------------------------------------------------------------
 		updateAuthKeys: function(key,secret,callback){
 
-			baseRequest = limiter(baseRequest.defaults({
+			self.apiKey = key
+			self.apiSecret = secret
+
+			baseRequest = limiter(baseRequestRaw.defaults({
 				auth: {
-					user: key,
-					pass: secret
+					user: self.apiKey,
+					pass: self.apiSecret
 				}
 			})).to(40).per(60);
 			if (to) baseRequest.to(to);
 			if (per)baseRequest.per(per);
+		},
+
+		getCurrentAuthKeys: function(){
+			return {
+				apiKey: self.apiKey,
+				apiSecret: self.apiSecret
+			}
 		},
 
 		getWarehouses: '/warehouses',

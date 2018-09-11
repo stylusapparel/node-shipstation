@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/justmaier/node-shipstation",
   "dependencies": {
+    "dotenv": "^6.0.0",
     "request": "^2.67.0",
     "simple-rate-limiter": "^0.2.3"
   }
