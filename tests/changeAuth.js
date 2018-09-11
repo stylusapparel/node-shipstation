@@ -9,6 +9,7 @@ const apiKey = process.env.DEFAULT_KEY,
 const ss = new shipstation(apiKey,apiSecret)
 
 function getCarriers(){
+
     return new Promise(function(resolve,reject){
         ss.getCarriers( function(e,res,body){
             if(e){
@@ -16,7 +17,6 @@ function getCarriers(){
                 reject(e)
             }
             else{
-                console.log(body)
                 resolve(body)
             }
         })
@@ -24,37 +24,28 @@ function getCarriers(){
     })
 }
 
-function run(){
-    runtest1(runtest2())
+async function run(){
+
+    await runtest()
+    ss.updateAuthKeys(testKey, testSecret)
+    console.log('Updated Api keys...')
+    await runtest()    
+    ss.updateAuthKeys(apiKey, apiSecret)
+    console.log('Updated Api keys...')
+    await runtest()  
 }
 
 
-function runtest1(next){
+async function runtest(){
     // console.log(ss)
     console.log(ss.getCurrentAuthKeys())
     console.log('List all carriers:')
-
-    getCarriers()
-        .then( function(carriers){
-            console.log(carriers)
-            next()
-        })
-        .catch( function(e){
-            console.log(e)
-        })
+    const carriers = await getCarriers() 
+    console.log(carriers)
+    return carriers
 }
 
-function runtest2(next){
-
-    return function(){
-        ss.updateAuthKeys(testKey, testSecret)
-        console.log('Updated Api keys...')
-        console.log(ss.getCurrentAuthKeys())
-        console.log('List all carriers:')
-        console.log(getCarriers())
-    }
-}
-
+// :)
 run()
 
 
