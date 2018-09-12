@@ -275,8 +275,8 @@ module.exports = function(apiKey, apiSecret, to, per){
 
 			baseRequest = limiter(baseRequestRaw.defaults({
 				auth: {
-					user: apiKey,
-					pass: apiSecret
+					user: key,
+					pass: secret
 				}
 			})).to(40).per(60);
 			if (to) baseRequest.to(to);
