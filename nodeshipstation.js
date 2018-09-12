@@ -275,8 +275,8 @@ module.exports = function(apiKey, apiSecret, to, per){
 
 			baseRequest = limiter(baseRequestRaw.defaults({
 				auth: {
-					user: self.apiKey,
-					pass: self.apiSecret
+					user: apiKey,
+					pass: apiSecret
 				}
 			})).to(40).per(60);
 			if (to) baseRequest.to(to);
@@ -288,6 +288,10 @@ module.exports = function(apiKey, apiSecret, to, per){
 				apiKey: self.apiKey,
 				apiSecret: self.apiSecret
 			}
+		},
+
+		isUser: function(key){
+			return ( self.apiKey === key )
 		},
 
 		getWarehouses: '/warehouses',
